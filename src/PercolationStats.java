@@ -78,6 +78,14 @@ public class PercolationStats {
         System.out.println("lower confidence interval is " + percolationStats2.confidenceLo());
         System.out.println("higher confidence interval is " + percolationStats2.confidenceHi());
         System.out.println("elapsed time is " + stopwatch2.elapsedTime());
+
+        Stopwatch stopwatch3 = new Stopwatch();
+        PercolationStats percolationStats3 = new PercolationStats(40, 200);
+        System.out.println("mean of probablity is " + percolationStats3.mean());
+        System.out.println("std of prob is " + percolationStats3.stddev());
+        System.out.println("lower confidence interval is " + percolationStats3.confidenceLo());
+        System.out.println("higher confidence interval is " + percolationStats3.confidenceHi());
+        System.out.println("elapsed time is " + stopwatch3.elapsedTime());
     }
 
 }
