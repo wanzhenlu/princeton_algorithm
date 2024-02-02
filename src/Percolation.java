@@ -15,12 +15,10 @@ public class Percolation {
         }
         this.n = n;
         this.isOpenGrid = new boolean[this.n][this.n];
-        int label = 1;
         for (int i = 1; i <= this.n; i++) {
             for (int j = 1; j <= this.n; j++) {
                 //initialize to be blocked
                 this.isOpenGrid[i - 1][j - 1] = false;
-                label++;
             }
         }
         //create dummy top and dummy bottom sites for percolation, as 0, and n^2+1
