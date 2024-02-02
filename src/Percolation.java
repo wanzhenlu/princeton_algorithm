@@ -8,21 +8,17 @@ public class Percolation {
     private int numberOfOpenSites=0;
     private WeightedQuickUnionUF wqufFull;
     private WeightedQuickUnionUF wqrfPerculate;
-    private int[][] indexToLabelMapper;
-
     public Percolation( int n){
         if (n<=0){
             throw new IllegalArgumentException("Negative n is invalid");
         }
         this.n = n;
         this.isOpenGrid = new boolean[this.n][this.n];
-        this.indexToLabelMapper = new int[this.n][this.n];
         int label = 1;
         for(int i = 1; i <= this.n; i++){
             for(int j = 1; j <= this.n; j++){
                 //initialize to be blocked
                 this.isOpenGrid[i-1][j-1] = false;
-                this.indexToLabelMapper[i-1][j-1] = label;
                 label ++;
             }
         }
@@ -50,30 +46,47 @@ public class Percolation {
             wqrfPerculate.union(getLabel(row, col), n*n+1);
         }
         // union neighbors
-        int[][] neighbors = new int[][]{new int[]{row - 1, col},
-                new int[]{row + 1, col},
-                new int[]{row, col - 1},
-                new int[]{row, col + 1}};
-        for (int[] neighbor : neighbors) {
-            if (neighbor[0] < 1 || neighbor[1] < 1
-                    || neighbor[0] > this.n || neighbor[1] > this.n) {
-                continue;
+        if (row-1 >=1){
+            int[] neighborIndex= new int[]{row-1, col};
+            if(isOpen(neighborIndex[0], neighborIndex[1])){
+                int neighbor = getLabel(neighborIndex[0], neighborIndex[1]);
+                wqufFull.union(neighbor, getLabel(row, col));
+                wqrfPerculate.union(neighbor, getLabel(row, col));
             }
-            int p = getLabel(row, col);
-            int q = getLabel(neighbor[0], neighbor[1]);
 
-            if (isOpen(neighbor[0], neighbor[1])) {
-                wqrfPerculate.union(p, q);
-                wqufFull.union(p, q);
+        }
+        if (row+1<=n){
+            int[] neighborIndex= new int[]{row+1, col};
+            if(isOpen(neighborIndex[0], neighborIndex[1])){
+                int neighbor = getLabel(neighborIndex[0], neighborIndex[1]);
+                wqufFull.union(neighbor, getLabel(row, col));
+                wqrfPerculate.union(neighbor, getLabel(row, col));
             }
+        }
+        if(col-1 >=1){
+            int[] neighborIndex= new int[]{row, col-1};
+            if(isOpen(neighborIndex[0], neighborIndex[1])){
+                int neighbor = getLabel(neighborIndex[0], neighborIndex[1]);
+                wqufFull.union(neighbor, getLabel(row, col));
+                wqrfPerculate.union(neighbor, getLabel(row, col));
             }
+        }
+        if(col+1<=n){
+            int[] neighborIndex= new int[]{row, col+1};
+            if(isOpen(neighborIndex[0], neighborIndex[1])){
+                int neighbor = getLabel(neighborIndex[0], neighborIndex[1]);
+                wqufFull.union(neighbor, getLabel(row, col));
+                wqrfPerculate.union(neighbor, getLabel(row, col));
+            }
+        }
+
         }
     }
 
 
     private int getLabel(int row, int col){
         //the tricky part is to map the grid to list of int array in order to call find and union function
-        return indexToLabelMapper[row-1][col-1];
+        return (row-1)*n + col;
     }
     public boolean isOpen(int row, int col){
         if (row <1 || col <1 || row >this.n || col > this.n){
