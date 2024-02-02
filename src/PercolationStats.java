@@ -18,34 +18,20 @@ public class PercolationStats {
         percList = new double[this.trails];
         for (int trail=0; trail < this.trails; trail++){
             percolation = new Percolation(n);
-            while(!percolation.percolates()){
-                int[] randomPosition = getRandomPosFromBlockedSites();
-                percolation.open(randomPosition[0], randomPosition[1] );
+            boolean isPercolate = false;
+            while((isPercolate==false) && (percolation.numberOfOpenSites()<n*n)){
+                int i = StdRandom.uniformInt(n);
+                int j = StdRandom.uniformInt(n);
+                percolation.open(i+1, j +1);
                 if (percolation.percolates()){
                     this.percList[trail] = (double) percolation.numberOfOpenSites()/(n*n);
+                    isPercolate = true;
                 }
             }
         }
 
     }
 
-    private int[] getRandomPosFromBlockedSites() {
-        //create a labels-to-block-position mapper
-        int label = 0;
-        int numberOfClosedSites = n * n - percolation.numberOfOpenSites();
-        int randomLabel = StdRandom.uniformInt(numberOfClosedSites);
-        for (int i=1;i<=n;i++) {
-            for (int j = 1; j <= n; j++) {
-                if (!percolation.isOpen(i,j)){
-                    if(randomLabel ==label){
-                        return new int[]{i,j};
-                    }
-                    label++;
-                }
-            }
-        }
-        return new int[]{0,0};
-    }
     public double mean(){
         return StdStats.mean(percList);
     }
